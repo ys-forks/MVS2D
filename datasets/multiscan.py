@@ -56,14 +56,13 @@ class MultiScan(data.Dataset):
         return data
 
     def __getitem__helper(self, index):
+        import pdb
+        pdb.set_trace()
         inputs = {}
         index = index % self.__len__()
         inputs['index'] = index
         scene, frame_ids = self.parse(index)
-        inputs['filenames'] = scene + '-' + '_'.join('%04d' % x
-                                                     for x in frame_ids)
-        import pdb
-        pdb.set_trace()
+        inputs['filenames'] = scene + '-' + '_'.join('%04d' % x for x in frame_ids)
         print('start')
         inputs = self.get_K(scene, inputs)
         for i, frame_id in enumerate(frame_ids):
