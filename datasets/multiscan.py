@@ -145,6 +145,8 @@ class MultiScan(data.Dataset):
         return depth_gt
 
     def get_K(self, scene, inputs):
+        import pdb
+        pdb.set_trace()
         path = os.path.join(self.opt.data_path, scene, 'intrinsic', "intrinsic_depth.txt")
         K = np.loadtxt(path).astype('float32')[:3, :3]
         inv_K = np.linalg.inv(K)
