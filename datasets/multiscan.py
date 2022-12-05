@@ -84,14 +84,15 @@ class MultiScan(data.Dataset):
                 inputs[("depth_gt", i, 0)] = self.get_depth(
                     scene, frame_id,
                     size=(640, 480)).astype('float32')[None, :, :]
-            import pdb
-            pdb.set_trace()
 
         if self.opt.perturb_pose and self.is_train:
             inputs = self.get_perturb_pose(inputs)
 
         inputs = self.compute_projection_matrix(inputs)
         inputs['num_frame'] = self.opt.num_frame
+
+        import pdb
+        pdb.set_trace()
 
         return inputs
 
