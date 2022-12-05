@@ -62,7 +62,8 @@ class MultiScan(data.Dataset):
         scene, frame_ids = self.parse(index)
         inputs['filenames'] = scene + '-' + '_'.join('%04d' % x
                                                      for x in frame_ids)
-
+        import pdb
+        pdb.set_trace()
         print('start')
         inputs = self.get_K(scene, inputs)
         for i, frame_id in enumerate(frame_ids):
@@ -152,7 +153,6 @@ class MultiScan(data.Dataset):
 
     def get_K(self, scene, inputs):
         path = os.path.join(self.opt.data_path, scene, 'intrinsic', "intrinsic_depth.txt")
-        assert os.path.exists(path)
         K = np.loadtxt(path).astype('float32')[:3, :3]
         inv_K = np.linalg.inv(K)
         gt_K = K.copy()
