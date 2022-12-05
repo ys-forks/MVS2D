@@ -91,6 +91,9 @@ class MultiScan(data.Dataset):
         inputs = self.compute_projection_matrix(inputs)
         inputs['num_frame'] = self.opt.num_frame
 
+        import pdb
+        pdb.set_trace()
+
         return inputs
 
     def get_perturb_pose(self, inputs):
@@ -145,8 +148,6 @@ class MultiScan(data.Dataset):
         return depth_gt
 
     def get_K(self, scene, inputs):
-        import pdb
-        pdb.set_trace()
         path = os.path.join(self.opt.data_path, scene, 'intrinsic', "intrinsic_depth.txt")
         K = np.loadtxt(path).astype('float32')[:3, :3]
         inv_K = np.linalg.inv(K)
