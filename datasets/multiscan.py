@@ -56,8 +56,6 @@ class MultiScan(data.Dataset):
         return data
 
     def __getitem__helper(self, index):
-        import pdb
-        pdb.set_trace()
         inputs = {}
         index = index % self.__len__()
         inputs['index'] = index
@@ -65,6 +63,9 @@ class MultiScan(data.Dataset):
         inputs['filenames'] = scene + '-' + '_'.join('%04d' % x for x in frame_ids)
         print('start')
         inputs = self.get_K(scene, inputs)
+        if len(inputs) == 0:
+            import pdb
+            pdb.set_trace()
         for i, frame_id in enumerate(frame_ids):
 
             inputs[("color", i, 0)] = self.get_color(
@@ -90,9 +91,6 @@ class MultiScan(data.Dataset):
 
         inputs = self.compute_projection_matrix(inputs)
         inputs['num_frame'] = self.opt.num_frame
-
-        import pdb
-        pdb.set_trace()
 
         return inputs
 
