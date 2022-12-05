@@ -118,8 +118,6 @@ class MultiScan(data.Dataset):
         if do_color_aug:
             color_aug = self.get_color_aug()
             anchors = transforms.ToPILImage()(color)
-            import pdb
-            pdb.set_trace()
             color = torch.from_numpy(
                 np.array(color_aug(anchors)).astype('float32').transpose(
                     2, 0, 1) / 255.0)
