@@ -152,6 +152,7 @@ class MultiScan(data.Dataset):
 
     def get_K(self, scene, inputs):
         path = os.path.join(self.opt.data_path, scene, 'intrinsic', "intrinsic_depth.txt")
+        assert os.path.exists(path)
         K = np.loadtxt(path).astype('float32')[:3, :3]
         inv_K = np.linalg.inv(K)
         gt_K = K.copy()
