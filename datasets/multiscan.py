@@ -111,7 +111,6 @@ class MultiScan(data.Dataset):
         path = os.path.join(self.opt.data_path, folder, 'color',
                             "%d.png" % frame_id)
         color = cv2.imread(path)
-        color = cv2.resize(color, (640, 480))
         color = cv2.cvtColor(color, cv2.COLOR_BGR2RGB)
         color = torch.from_numpy(color).permute(2, 0, 1) / 255.
         if not self.opt.disable_color_aug:
@@ -139,7 +138,6 @@ class MultiScan(data.Dataset):
         path = os.path.join(self.opt.data_path, folder, 'depth',
                             "%d.png" % frame_id)
         depth_gt = cv2.imread(path, 2) / 1000.0
-        depth_gt = cv2.resize(depth_gt, (640, 480), interpolation=cv2.INTER_NEAREST)
         if size is not None:
             depth_gt = cv2.resize(depth_gt,
                                   size,
@@ -148,10 +146,7 @@ class MultiScan(data.Dataset):
 
     def get_K(self, scene, inputs):
         path = os.path.join(self.opt.data_path, scene, 'intrinsic', "intrinsic_depth.txt")
-        scale_depth = 480 / 192
-        scale = np.array([scale_depth, scale_depth, 1.0])
         K = np.loadtxt(path).astype('float32')[:3, :3]
-        K = np.matmul(np.diag(scale), K)
         inv_K = np.linalg.inv(K)
         gt_K = K.copy()
         gt_K[:2, :] /= 2**self.output_scale

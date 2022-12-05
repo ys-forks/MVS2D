@@ -226,8 +226,6 @@ class BaseTrainer(object):
             if batch_idx >= self.opt.epoch_size:
                 break
 
-            import pdb
-            pdb.set_trace()
             after_data_loader_time = time.time()
             duration_data = after_data_loader_time - before_data_loader_time
             self.total_data_time += duration_data
