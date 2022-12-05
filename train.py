@@ -161,7 +161,7 @@ class Trainer(BaseTrainer):
         depth_pred = outputs[('depth_pred', s)]
         depth_gt = inputs[('depth_gt', 0, s)]
 
-        if self.opt.dataset == 'ScanNet':
+        if self.opt.dataset == 'ScanNet' or self.opt.dataset == 'multiscan':
             valid_depth = (depth_gt > 0)
         elif self.opt.dataset == 'DeMoN':
             valid_depth = ((depth_gt != 0) & (depth_gt >= self.opt.min_depth) &

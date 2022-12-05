@@ -17,24 +17,21 @@ import torch.nn.functional as F
 from utils import npy
 
 
-class ScanNet(data.Dataset):
+class MultiScan(data.Dataset):
     def __init__(self, data_split, opt):
-        super(ScanNet, self).__init__()
+        super(MultiScan, self).__init__()
         self.data_split = data_split
         self.opt = opt
         self.output_scale = self.opt.output_scale
         self.output_width = self.opt.width // (2**self.output_scale)
         self.output_height = self.opt.height // (2**self.output_scale)
 
-        split_file = "./splits/ScanNet_%d_frame_%s.npy" % (
-            self.opt.num_frame, data_split)
+        split_file = "./splits/multiscan_%s.npy" % (data_split)
         self.samples = np.load(split_file, allow_pickle=True).tolist()
 
         self.is_train = data_split == 'train'
         if self.opt.perturb_pose and data_split == 'train':
-            self.pose_cache = np.load('data/ScanNet_%d_frame_jitter_pose.npy' %
-                                      self.opt.num_frame,
-                                      allow_pickle=True).item()
+            self.pose_cache = np.load('data/MultiScan_jitter_pose.npy', allow_pickle=True).item()
 
     def __len__(self):
         return len(self.samples)
@@ -106,14 +103,15 @@ class ScanNet(data.Dataset):
 
     def get_pose(self, scene, frame_id):
         path = os.path.join(self.opt.data_path, scene, 'pose',
-                            "%06d.txt" % frame_id)
+                            "%d.txt" % frame_id)
         pose = np.loadtxt(path).astype('float32')
         return pose
 
     def get_color(self, folder, frame_id):
-        path = os.path.join(self.opt.data_path, folder, 'rgb',
-                            "%06d.jpg" % frame_id)
+        path = os.path.join(self.opt.data_path, folder, 'color',
+                            "%d.png" % frame_id)
         color = cv2.imread(path)
+        color = cv2.resize(color, (640, 480))
         color = cv2.cvtColor(color, cv2.COLOR_BGR2RGB)
         color = torch.from_numpy(color).permute(2, 0, 1) / 255.
         if not self.opt.disable_color_aug:
@@ -139,8 +137,9 @@ class ScanNet(data.Dataset):
 
     def get_depth(self, folder, frame_id, size=None):
         path = os.path.join(self.opt.data_path, folder, 'depth',
-                            "%06d.png" % frame_id)
+                            "%d.png" % frame_id)
         depth_gt = cv2.imread(path, 2) / 1000.0
+        depth_gt = cv2.resize(depth_gt, (640, 480), interpolation=cv2.INTER_NEAREST)
         if size is not None:
             depth_gt = cv2.resize(depth_gt,
                                   size,
@@ -148,8 +147,8 @@ class ScanNet(data.Dataset):
         return depth_gt
 
     def get_K(self, scene, inputs):
-        path = os.path.join(self.opt.data_path, scene, "intrinsics.txt")
-        K = np.loadtxt(path).astype('float32')
+        path = os.path.join(self.opt.data_path, scene, 'intrinsic', "intrinsic_depth.txt")
+        K = np.loadtxt(path).astype('float32')[:3, :3]
         inv_K = np.linalg.inv(K)
         gt_K = K.copy()
         gt_K[:2, :] /= 2**self.output_scale

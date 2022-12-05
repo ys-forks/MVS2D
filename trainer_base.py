@@ -148,6 +148,8 @@ class BaseTrainer(object):
     def build_dataset(self):
         if self.opt.dataset == 'ScanNet':
             from datasets.ScanNet import ScanNet as Dataset
+        elif self.opt.dataset == 'multiscan':
+            from datasets.multiscan import MultiScan as Dataset
         elif self.opt.dataset == 'DeMoN':
             from datasets.DeMoN import DeMoN as Dataset
         elif self.opt.dataset == 'DTU':
