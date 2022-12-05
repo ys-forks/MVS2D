@@ -148,7 +148,10 @@ class MultiScan(data.Dataset):
 
     def get_K(self, scene, inputs):
         path = os.path.join(self.opt.data_path, scene, 'intrinsic', "intrinsic_depth.txt")
+        scale_depth = 480 / 192
+        scale = np.array([scale_depth, scale_depth, 1.0])
         K = np.loadtxt(path).astype('float32')[:3, :3]
+        K = np.matmul(np.diag(scale), K)
         inv_K = np.linalg.inv(K)
         gt_K = K.copy()
         gt_K[:2, :] /= 2**self.output_scale
