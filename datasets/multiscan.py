@@ -109,8 +109,6 @@ class MultiScan(data.Dataset):
     def get_color(self, folder, frame_id):
         path = os.path.join(self.opt.data_path, folder, 'color',
                             "%d.png" % frame_id)
-        import pdb
-        pdb.set_trace()
         color = cv2.imread(path)
         color = cv2.cvtColor(color, cv2.COLOR_BGR2RGB)
         color = torch.from_numpy(color).permute(2, 0, 1) / 255.
@@ -124,6 +122,8 @@ class MultiScan(data.Dataset):
             color = torch.from_numpy(
                 np.array(color_aug(anchors)).astype('float32').transpose(
                     2, 0, 1) / 255.0)
+        import pdb
+        pdb.set_trace()
         return color
 
     def get_color_aug(self):
