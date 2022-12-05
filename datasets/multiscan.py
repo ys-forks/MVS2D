@@ -63,6 +63,7 @@ class MultiScan(data.Dataset):
         inputs['filenames'] = scene + '-' + '_'.join('%04d' % x
                                                      for x in frame_ids)
 
+        print('start')
         inputs = self.get_K(scene, inputs)
         for i, frame_id in enumerate(frame_ids):
 
