@@ -3,3 +3,8 @@ pretrained_model
 */*.swp
 */*/*.swp
 sync.sh
+
+__pycache__/
+splits/
+experiments/
+data/
