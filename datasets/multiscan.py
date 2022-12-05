@@ -70,8 +70,6 @@ class MultiScan(data.Dataset):
                 scene,
                 frame_id,
             )
-            import pdb
-            pdb.set_trace()
             inputs[("pose", i)] = self.get_pose(scene,
                                                 frame_id).astype('float32')
             inputs[("pose_inv",
@@ -85,6 +83,8 @@ class MultiScan(data.Dataset):
                 inputs[("depth_gt", i, 0)] = self.get_depth(
                     scene, frame_id,
                     size=(640, 480)).astype('float32')[None, :, :]
+            import pdb
+            pdb.set_trace()
 
         if self.opt.perturb_pose and self.is_train:
             inputs = self.get_perturb_pose(inputs)
@@ -106,6 +106,7 @@ class MultiScan(data.Dataset):
         path = os.path.join(self.opt.data_path, scene, 'pose',
                             "%d.txt" % frame_id)
         pose = np.loadtxt(path).astype('float32')
+        print('pose end')
         return pose
 
     def get_color(self, folder, frame_id):
@@ -124,8 +125,7 @@ class MultiScan(data.Dataset):
             color = torch.from_numpy(
                 np.array(color_aug(anchors)).astype('float32').transpose(
                     2, 0, 1) / 255.0)
-        import pdb
-        pdb.set_trace()
+        print('color end')
         return color
 
     def get_color_aug(self):
@@ -145,6 +145,7 @@ class MultiScan(data.Dataset):
             depth_gt = cv2.resize(depth_gt,
                                   size,
                                   interpolation=cv2.INTER_NEAREST)
+        print('depth end')
         return depth_gt
 
     def get_K(self, scene, inputs):
@@ -173,6 +174,7 @@ class MultiScan(data.Dataset):
         inputs[("K",
                 self.output_scale)] = torch.from_numpy(gt_K.astype('float32'))
         inputs['K_pool'] = K_pool
+        print('K end')
         return inputs
 
     def compute_projection_matrix(self, inputs):
