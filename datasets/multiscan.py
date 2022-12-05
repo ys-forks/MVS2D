@@ -53,6 +53,7 @@ class MultiScan(data.Dataset):
             except Exception as e:
                 print(e)
                 idx = np.random.choice(self.__len__(), 1)[0]
+                raise e
         return data
 
     def __getitem__helper(self, index):
@@ -63,9 +64,6 @@ class MultiScan(data.Dataset):
         inputs['filenames'] = scene + '-' + '_'.join('%04d' % x for x in frame_ids)
         print('start')
         inputs = self.get_K(scene, inputs)
-        if len(inputs) == 0:
-            import pdb
-            pdb.set_trace()
         for i, frame_id in enumerate(frame_ids):
 
             inputs[("color", i, 0)] = self.get_color(
