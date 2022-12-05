@@ -70,6 +70,8 @@ class MultiScan(data.Dataset):
                 scene,
                 frame_id,
             )
+            import pdb
+            pdb.set_trace()
             inputs[("pose", i)] = self.get_pose(scene,
                                                 frame_id).astype('float32')
             inputs[("pose_inv",
